@@ -112,19 +112,42 @@ function drawLineByData(target) {
     return;
 }
 
-function drawLineForBack(target) {
-    for (const tmpTargetName in importData) {
-        if (tmpTargetName == "settings") {
-            continue;
+function drawLineForBack(targetName) {
+    let queue = [targetName];
+
+    while (queue.length > 0) {
+        targetName = queue.shift();
+
+        for (const tmpTargetName in importData) {
+            if (tmpTargetName == "settings") {
+                continue;
+            }
+
+            if (targetName == tmpTargetName) {
+                continue;
+            }
+
+            let tmpTarget = importData[tmpTargetName];
+
+            if (tmpTarget.selected) {
+                continue;
+            }
+
+            for (const lines of tmpTarget.line) {
+                if ((lines[2].pstX == importData[targetName].pstX) && (lines[2].pstY == importData[targetName].pstY)) {
+                    tmpTarget.selected = true;
+
+                    if (!queue.includes(tmpTargetName)) {
+                        queue.push(tmpTargetName)
+                    }
+
+                    break;
+                }
+            }
         }
 
-        let tmpTarget = importData[tmpTargetName];
-
-        for (const lines of tmpTarget.line) {
-            if ((lines[2].pstX == target.pstX) && (lines[2].pstY == target.pstY)) {
-                tmpTarget.selected = ~tmpTarget.selected;
-                break;
-            }
+        if (document.querySelector("#cbNearestBack").checked) {
+            break;
         }
     }
 
@@ -150,8 +173,8 @@ function canvasClickHandler(params) {
 
     selectedTargetName = targetName;
     let target = importData[targetName];
-    target.selected = ~target.selected;
-    drawLineForBack(target);
+    target.selected = true;
+    drawLineForBack(targetName);
     updateContext();
     return;
 }
