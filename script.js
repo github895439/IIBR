@@ -93,7 +93,7 @@ function updateContext() {
 function drawStructByData(structName) {
     context.strokeStyle = "black";
     context.strokeRect(importData[structName].pstX, importData[structName].pstY, importData[structName].width, importData[structName].height);
-    context.fillText(structName, importData[structName].pstX + importData.settings.STROKE_MARGIN, importData[structName].pstY + importData.settings.STROKE_MARGIN);
+    context.fillText(importData[structName].rectName, importData[structName].pstX + importData.settings.STROKE_MARGIN, importData[structName].pstY + importData.settings.STROKE_MARGIN);
     context.fillText(importData[structName].inputString, importData[structName].pstX + importData.settings.STROKE_MARGIN, importData[structName].pstY + importData.settings.STROKE_MARGIN + importData.settings.fontSize);
     return;
 }
@@ -179,6 +179,11 @@ function canvasClickHandler(params) {
     return;
 }
 
+function cbNearestBackHandler(params) {
+    resetHandler();
+    return;
+}
+
 window.addEventListener("load", function () {
     main();
     return;
@@ -203,6 +208,7 @@ function main() {
     divEle.appendChild(canvasEle);
     document.querySelector("input[type='button'][value='IMPORT']").addEventListener("click", importHandler);
     document.querySelector("input[type='button'][value='RESET']").addEventListener("click", resetHandler);
+    document.querySelector("#cbNearestBack").addEventListener("change", cbNearestBackHandler);
     resetHandler();
     return;
 }
